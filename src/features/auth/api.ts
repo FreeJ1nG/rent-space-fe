@@ -24,7 +24,7 @@ export const authApi = api.injectEndpoints({
     }),
     getUser: builder.query<User, ApiParam>({
       query: ({ accessToken }) => ({
-        url: `/auth/current-user`,
+        url: `/user/current`,
         method: "GET",
         headers: {
           Authorization: `Bearer ${accessToken}`,
