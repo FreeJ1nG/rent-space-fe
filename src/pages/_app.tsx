@@ -10,6 +10,7 @@ import { PATH_AUTH } from "@/common/routes/path";
 import { useAuthContext } from "@/common/contexts/authContext";
 import { Box } from "@mui/material";
 import useIsRendered from "@/common/hooks/useIsRendered";
+import Head from "next/head";
 
 const LoginGuard = ({ children }: ChildrenProps) => {
   const isRendered = useIsRendered();
@@ -32,16 +33,21 @@ const LoginGuard = ({ children }: ChildrenProps) => {
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <ReduxProvider store={store}>
-      <AuthContextProvider>
-        <LoginGuard>
-          <div className="relative">
-            <Navbar />
-            <div className="h-20" />
-            <Component {...pageProps} />
-          </div>
-        </LoginGuard>
-      </AuthContextProvider>
-    </ReduxProvider>
+    <>
+      <Head>
+        <title>Rent Space</title>
+      </Head>
+      <ReduxProvider store={store}>
+        <AuthContextProvider>
+          <LoginGuard>
+            <div className="relative">
+              <Navbar />
+              <div className="h-20" />
+              <Component {...pageProps} />
+            </div>
+          </LoginGuard>
+        </AuthContextProvider>
+      </ReduxProvider>
+    </>
   );
 }

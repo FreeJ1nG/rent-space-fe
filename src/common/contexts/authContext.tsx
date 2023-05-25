@@ -52,6 +52,7 @@ export function AuthContextProvider({ children }: ChildrenProps) {
 
   useEffect(() => {
     if (getAccessToken()) {
+      console.log(getAccessToken());
       fetchUserData({ accessToken: getAccessToken() })
         .unwrap()
         .then((result) => {
