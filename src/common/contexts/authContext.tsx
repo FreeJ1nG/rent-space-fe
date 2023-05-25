@@ -30,6 +30,8 @@ interface IAuthContext {
   email?: string;
   firstname?: string;
   lastname?: string;
+  role?: string;
+  active?: boolean;
 }
 
 const AuthContext = createContext<IAuthContext | undefined>(undefined);
@@ -40,6 +42,8 @@ export function AuthContextProvider({ children }: ChildrenProps) {
   const [email, setEmail] = useState<string | undefined>(undefined);
   const [firstname, setFirstname] = useState<string | undefined>(undefined);
   const [lastname, setLastname] = useState<string | undefined>(undefined);
+  const [role, setRole] = useState<string | undefined>(undefined);
+  const [active, setActive] = useState<boolean | undefined>(undefined);
   const [loginUser] = useLoginMutation();
   const [registerUser] = useRegisterMutation();
   const { getAccessToken, removeAccessToken, setAccessToken } =
@@ -52,13 +56,14 @@ export function AuthContextProvider({ children }: ChildrenProps) {
 
   useEffect(() => {
     if (getAccessToken()) {
-      console.log(getAccessToken());
       fetchUserData({ accessToken: getAccessToken() })
         .unwrap()
         .then((result) => {
           setEmail(result.email);
           setFirstname(result.firstname);
           setLastname(result.lastname);
+          setRole(result.role);
+          setActive(result.active);
         })
         .catch((err) => {
           setError(err);
@@ -67,6 +72,8 @@ export function AuthContextProvider({ children }: ChildrenProps) {
       setEmail(undefined);
       setFirstname(undefined);
       setLastname(undefined);
+      setRole(undefined);
+      setActive(undefined);
     }
   }, [isAuthenticated]);
 
@@ -110,6 +117,8 @@ export function AuthContextProvider({ children }: ChildrenProps) {
         email,
         firstname,
         lastname,
+        role,
+        active,
         isAuthenticated,
         login,
         register,
@@ -121,6 +130,8 @@ export function AuthContextProvider({ children }: ChildrenProps) {
       email,
       firstname,
       lastname,
+      role,
+      active,
       login,
       register,
       logout,

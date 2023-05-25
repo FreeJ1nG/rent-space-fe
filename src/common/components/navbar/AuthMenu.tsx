@@ -50,7 +50,7 @@ function AuthMenu() {
           horizontal: "right",
         }}
       >
-        <MenuItem>
+        <MenuItem onClick={() => router.push("/profile")}>
           <Box mr={2}>
             <Email />
           </Box>
