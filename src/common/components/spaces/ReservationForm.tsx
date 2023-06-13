@@ -1,3 +1,5 @@
+import { useAuthContext } from "@/common/contexts/authContext";
+import useAccessToken from "@/common/hooks/useAccessToken";
 import axiosApi from "@/common/services/axios";
 import { Button, Checkbox } from "@mui/material";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -16,7 +18,13 @@ export default function ReservationForm({
     [] as number[]
   );
 
-  const email = "tes@gmail.com";
+  const { email } = useAuthContext() || {};
+  const { getAccessToken } = useAccessToken();
+  const token = getAccessToken();
+  const config = {
+    headers: { Authorization: `Bearer ${token}` }
+};
+  console.log(email);
   const router = useRouter();
 
   const handleRemoveId = (id: number) => {
@@ -36,7 +44,7 @@ export default function ReservationForm({
     const response = await axiosApi.post("/reservation", {
       spaceId: selectedSpaceId,
       email: email,
-    });
+    },config);
     router.replace(router.asPath);
   };
 

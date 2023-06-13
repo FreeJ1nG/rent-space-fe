@@ -1,3 +1,4 @@
+import useAccessToken from "@/common/hooks/useAccessToken";
 import axiosApi from "@/common/services/axios";
 import { Button, MenuItem, Select, TextField } from "@mui/material";
 import axios from "axios";
@@ -9,13 +10,18 @@ interface CategoryType {
 export default function CreateCategory() {
   const [newCategory, setNewCategory] = useState<string>("");
   const [categoryType, setCategoryType] = useState<CategoryType>();
+  const { getAccessToken } = useAccessToken();
+  const token = getAccessToken();
 
   const handleSubmit = async () => {
     try {
+      const config = {
+        headers: { Authorization: `Bearer ${token}` }
+    };
       const response = await axiosApi.post("/space-category", {
         name: newCategory,
         type: categoryType,
-      });
+      }, config);
       window.alert("Category " + newCategory + " Created Successfully");
     } catch (err) {
       if (axios.isAxiosError(err)) {

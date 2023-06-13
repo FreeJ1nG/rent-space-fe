@@ -1,5 +1,6 @@
 import ReservationForm from "@/common/components/spaces/ReservationForm";
 import SpaceInfo from "@/common/components/spaces/SpaceInfo";
+import useAccessToken from "@/common/hooks/useAccessToken";
 import axiosApi from "@/common/services/axios";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -32,13 +33,17 @@ const SpaceDetails = () => {
   const [availableDateMap, setAvailableDateMap] = useState(
     new Map<Date, number>()
   );
-
+  const { getAccessToken } = useAccessToken();
+  const token = getAccessToken();
+  const config = {
+    headers: { Authorization: `Bearer ${token}` }
+};
   const updateMap = (date: Date, id: number) => {
     setAvailableDateMap(new Map(availableDateMap.set(date, id)));
   };
 
   const getSpace = async () => {
-    const response = await axiosApi.get(`/space/${name}`);
+    const response = await axiosApi.get(`/space/${name}`,config);
     await response.data.forEach(({ id, date, isAvailable }: AvailableDate) => {
       if (isAvailable) {
         updateMap(date, id);

@@ -1,4 +1,5 @@
 import SpaceCard from "@/common/components/spaces/SpaceCard";
+import useAccessToken from "@/common/hooks/useAccessToken";
 import axiosApi from "@/common/services/axios";
 import {
   CircularProgress,
@@ -27,13 +28,18 @@ const SpacePage = () => {
   const [spaces, setSpaces] = useState<Space[]>([]);
   const [spaceCategory, setSpaceCategory] = useState<String[]>([] as String[]);
   const [filter, setFilter] = useState("");
+  const { getAccessToken } = useAccessToken();
+  const token = getAccessToken();
+  const config = {
+    headers: { Authorization: `Bearer ${token}` }
+};
 
   const getSpaces = async () => {
-    const response = await axiosApi.get("/space");
+    const response = await axiosApi.get("/space",config);
     setSpaces(response.data);
   };
   const getSpaceCategory = async () => {
-    const response = await axiosApi.get(`/space-category`);
+    const response = await axiosApi.get(`/space-category`,config);
     const categories = ["All"];
     response.data.forEach((category: SpaceCategory) => {
       categories.push(category.name);
@@ -41,7 +47,7 @@ const SpacePage = () => {
     setSpaceCategory(categories);
   };
   const getSpaceByCategory = async (category: String) => {
-    const response = await axiosApi.get(`/space/category/${category}`);
+    const response = await axiosApi.get(`/space/category/${category}`,config);
     setSpaces(response.data);
   };
   const handleFilterChange = (event: SelectChangeEvent) => {

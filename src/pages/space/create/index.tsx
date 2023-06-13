@@ -1,3 +1,4 @@
+import useAccessToken from "@/common/hooks/useAccessToken";
 import axiosApi from "@/common/services/axios";
 import {
   Autocomplete,
@@ -32,8 +33,14 @@ export default function CreateSpace() {
   const [spaceCategories, setSpaceCategories] = useState<string[]>(
     [] as string[]
   );
+  const { getAccessToken } = useAccessToken();
+  const token = getAccessToken();
+  
+  const config = {
+    headers: { Authorization: `Bearer ${token}` }
+};
   const getSpaceCategory = async () => {
-    const response = await axiosApi.get(`/space-category`);
+    const response = await axiosApi.get(`/space-category`, config);
     const categories: string[] = [];
     response.data.forEach((category: SpaceCategory) => {
       categories.push(category.name);
@@ -52,7 +59,7 @@ export default function CreateSpace() {
         description: description,
         categoryName: category,
         facilities: facilities,
-      });
+      }, config);
       window.alert("Space " + spaceName + " Created Successfully");
     } catch (err) {
       if (axios.isAxiosError(err)) {
